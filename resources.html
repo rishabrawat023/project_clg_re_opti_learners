@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Resources - Campus Resource Optimizer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{{ url_for('dashboard') }}">Campus Resource Optimizer</a>
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link active" aria-current="page" href="{{ url_for('resources_page') }}">Resources</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('bookings_page') }}">Bookings</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('recommendation_page') }}">Recommendation</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+    <h1 class="mb-4">Resources</h1>
+
+    <!-- Add Resource Form -->
+    <form class="row g-3 mb-4" method="post" action="{{ url_for('add_resource_route') }}">
+        <div class="col-md-2"><input class="form-control" name="resource_id" placeholder="ID" required></div>
+        <div class="col-md-2"><input class="form-control" name="name" placeholder="Name" required></div>
+        <div class="col-md-2">
+            <select class="form-select" name="resource_type" required>
+                <option value="">Type</option>
+                <option>Classroom</option>
+                <option>Computer Lab</option>
+                <option>Seminar Hall</option>
+                <option>Auditorium</option>
+            </select>
+        </div>
+        <div class="col-md-1"><input type="number" class="form-control" name="capacity" placeholder="Cap" required></div>
+        <div class="col-md-2"><input class="form-control" name="building" placeholder="Building" required></div>
+        <div class="col-md-1"><input type="number" class="form-control" name="floor" placeholder="Floor" required></div>
+        <div class="col-md-2"><input class="form-control" name="equipment" placeholder="Equipment"></div>
+        <div class="col-md-1">
+            <select class="form-select" name="status" required>
+                <option>Available</option>
+                <option>Unavailable</option>
+            </select>
+        </div>
+        <div class="col-12"><button type="submit" class="btn btn-success">Add Resource</button></div>
+    </form>
+
+    <!-- Resource Table -->
+    <table class="table table-striped">
+        <thead class="table-primary">
+            <tr>
+                <th>ID</th><th>Name</th><th>Type</th><th>Cap</th><th>Building</th><th>Floor</th><th>Equipment</th><th>Status</th><th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for r in resources %}
+            <tr>
+                <td>{{ r.resource_id }}</td>
+                <td>{{ r.name }}</td>
+                <td>{{ r.resource_type }}</td>
+                <td>{{ r.capacity }}</td>
+                <td>{{ r.building }}</td>
+                <td>{{ r.floor }}</td>
+                <td>{{ r.equipment }}</td>
+                <td>{{ r.status }}</td>
+                <td>
+                    <a class="btn btn-sm btn-primary" href="{{ url_for('edit_resource_route', resource_id=r.resource_id) }}">Edit</a>
+                    <form style="display:inline;" method="post" action="{{ url_for('delete_resource_route', resource_id=r.resource_id) }}" onsubmit="return confirm('Delete this resource?');">
+                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
